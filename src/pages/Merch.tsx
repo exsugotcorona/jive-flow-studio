@@ -7,7 +7,7 @@ const Merch = () => {
   const products = [
     {
       id: 1,
-      name: "JiveStudio T-Shirt",
+      name: "DancePlanet T-Shirt",
       description: "Premium cotton t-shirt with our signature logo. Perfect for practice sessions.",
       price: "$25",
       image: "/placeholder.svg",
@@ -25,7 +25,7 @@ const Merch = () => {
     },
     {
       id: 3,
-      name: "JiveStudio Hoodie",
+      name: "DancePlanet Hoodie",
       description: "Comfortable fleece hoodie for staying warm during practice or casual wear.",
       price: "$45",
       image: "/placeholder.svg",
@@ -69,7 +69,7 @@ const Merch = () => {
       <section className="py-16 px-4 text-center bg-muted/30">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            JiveStudio Merchandise
+            DancePlanet Merchandise
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Get equipped with high-quality dance apparel, shoes, and accessories. 
