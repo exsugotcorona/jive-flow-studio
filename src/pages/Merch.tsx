@@ -9,7 +9,7 @@ const Merch = () => {
       id: 1,
       name: "DancePlanet T-Shirt",
       description: "Premium cotton t-shirt with our signature logo. Perfect for practice sessions.",
-      price: "$25",
+      price: "₹1,800",
       image: "/placeholder.svg",
       category: "Apparel",
       sizes: ["S", "M", "L", "XL"]
@@ -18,7 +18,7 @@ const Merch = () => {
       id: 2,
       name: "Dance Practice Shoes",
       description: "Professional suede-soled shoes designed specifically for jive and swing dancing.",
-      price: "$89",
+      price: "₹6,500",
       image: "/placeholder.svg", 
       category: "Footwear",
       sizes: ["6", "7", "8", "9", "10", "11"]
@@ -27,7 +27,7 @@ const Merch = () => {
       id: 3,
       name: "DancePlanet Hoodie",
       description: "Comfortable fleece hoodie for staying warm during practice or casual wear.",
-      price: "$45",
+      price: "₹3,200",
       image: "/placeholder.svg",
       category: "Apparel", 
       sizes: ["S", "M", "L", "XL", "XXL"]
@@ -36,7 +36,7 @@ const Merch = () => {
       id: 4,
       name: "Practice Skirt",
       description: "Flowy practice skirt that moves beautifully with jive spins and turns.",
-      price: "$35",
+      price: "₹2,500",
       image: "/placeholder.svg",
       category: "Apparel",
       sizes: ["XS", "S", "M", "L", "XL"]
@@ -45,7 +45,7 @@ const Merch = () => {
       id: 5,
       name: "Jive Music Collection",
       description: "Curated playlist of classic and modern jive tracks for practice and performance.",
-      price: "$15",
+      price: "₹999",
       image: "/placeholder.svg",
       category: "Music",
       sizes: ["Digital Download"]
@@ -54,7 +54,7 @@ const Merch = () => {
       id: 6,
       name: "Dance Bag",
       description: "Spacious bag with compartments for shoes, clothes, and accessories.",
-      price: "$55",
+      price: "₹4,000",
       image: "/placeholder.svg",
       category: "Accessories",
       sizes: ["One Size"]
@@ -148,7 +148,7 @@ const Merch = () => {
             <div>
               <h3 className="font-semibold mb-2">Free Shipping</h3>
               <p className="text-muted-foreground">
-                Free shipping on orders over $75 within the continental US.
+                Free shipping on orders over ₹5,000 within India.
               </p>
             </div>
             <div>

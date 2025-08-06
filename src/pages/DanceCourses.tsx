@@ -13,7 +13,7 @@ const DanceCourses = () => {
       duration: "6 weeks",
       classSize: "8-12 students",
       schedule: "Tuesdays 7:00-8:00 PM",
-      price: "$120",
+      price: "₹8,000",
       features: [
         "Basic jive steps and timing",
         "Rock step and chasse",
@@ -29,7 +29,7 @@ const DanceCourses = () => {
       duration: "8 weeks",
       classSize: "6-10 students", 
       schedule: "Thursdays 7:30-8:30 PM",
-      price: "$160",
+      price: "₹12,000",
       features: [
         "Advanced footwork patterns",
         "Multiple spin combinations",
@@ -45,7 +45,7 @@ const DanceCourses = () => {
       duration: "10 weeks",
       classSize: "4-8 students",
       schedule: "Saturdays 6:00-7:30 PM", 
-      price: "$250",
+      price: "₹18,000",
       features: [
         "Complex combination sequences",
         "Performance techniques",

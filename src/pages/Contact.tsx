@@ -170,7 +170,7 @@ const Contact = () => {
                   <div>
                     <h4 className="font-medium mb-1">Can I try a class first?</h4>
                     <p className="text-sm text-muted-foreground">
-                      Yes! Contact us to schedule a trial class for just $15.
+                      Yes! Contact us to schedule a trial class for just ₹1,000.
                     </p>
                   </div>
                 </CardContent>
