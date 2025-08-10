@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/components/ui/sonner";
 
 const Merch = () => {
   const products = [
@@ -62,6 +64,32 @@ const Merch = () => {
   ];
 
   const categories = ["All", "Apparel", "Footwear", "Music", "Accessories"];
+
+  const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
+
+  const createPayment = async (product: typeof products[number]) => {
+    try {
+      const { data, error } = await supabase.functions.invoke("instamojo-create-payment", {
+        body: {
+          amount: parseAmount(product.price),
+          purpose: product.name,
+          product_id: product.id,
+          product_type: "merch",
+          redirect_url: `${window.location.origin}/payment/success`,
+        },
+      });
+
+      if (error) throw error as any;
+      const url = (data as any)?.url;
+      if (url) {
+        window.location.href = url;
+      } else {
+        toast.error("Failed to start payment. Please try again.");
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "Payment error");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -129,9 +157,9 @@ const Merch = () => {
                 </CardContent>
 
                 <CardFooter>
-                  <Button className="w-full">
+                  <Button className="w-full" onClick={() => createPayment(product)}>
                     <ShoppingCart className="h-4 w-4 mr-2" />
-                    Add to Cart
+                    Buy Now
                   </Button>
                 </CardFooter>
               </Card>
