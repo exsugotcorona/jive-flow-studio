@@ -21,12 +21,18 @@ export const FloatingNav = ({
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      setVisible(currentScrollY < 50 || currentScrollY < window.innerHeight * 0.1);
+      // Always show navbar on non-home pages, hide/show on home page based on scroll
+      if (location.pathname !== "/") {
+        setVisible(true);
+      } else {
+        setVisible(currentScrollY < 50 || currentScrollY < window.innerHeight * 0.1);
+      }
     };
 
+    handleScroll(); // Call immediately to set initial state
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [location.pathname]);
 
   return (
     <AnimatePresence mode="wait">

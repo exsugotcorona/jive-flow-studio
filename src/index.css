@@ -125,6 +125,10 @@ All colors MUST be HSL.
   .animate-meteor-effect {
     animation: meteor 5s linear infinite;
   }
+  
+  .animate-shine {
+    animation: shine 2s ease-in-out infinite;
+  }
 }
 
 @keyframes spotlight {
@@ -149,5 +153,14 @@ All colors MUST be HSL.
   100% {
     transform: rotate(215deg) translateX(-500px);
     opacity: 0;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
   }
 }
