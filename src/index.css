@@ -17,8 +17,9 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 13% 13%;
 
-    --primary: 259 94% 51%;
+    --primary: 281 83% 57%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 285 100% 70%;
 
     --secondary: 220 13% 91%;
     --secondary-foreground: 220 9% 46%;
@@ -34,24 +35,25 @@ All colors MUST be HSL.
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 259 94% 51%;
+    --ring: 281 83% 57%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Modern gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(281 83% 57%), hsl(285 100% 70%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 13% 91%));
+    
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(281 83% 57% / 0.3);
+    --shadow-soft: 0 4px 20px -2px hsl(220 13% 13% / 0.1);
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -65,8 +67,9 @@ All colors MUST be HSL.
     --popover: 220 13% 9%;
     --popover-foreground: 220 13% 91%;
 
-    --primary: 259 94% 51%;
+    --primary: 281 83% 57%;
     --primary-foreground: 0 0% 100%;
+    --primary-glow: 285 100% 70%;
 
     --secondary: 220 13% 15%;
     --secondary-foreground: 220 13% 91%;
@@ -82,7 +85,16 @@ All colors MUST be HSL.
 
     --border: 220 13% 15%;
     --input: 220 13% 15%;
-    --ring: 259 94% 51%;
+    --ring: 281 83% 57%;
+    
+    /* Modern gradients for dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(281 83% 57%), hsl(285 100% 70%));
+    --gradient-subtle: linear-gradient(180deg, hsl(220 13% 9%), hsl(220 13% 15%));
+    
+    /* Shadows for dark mode */
+    --shadow-elegant: 0 10px 30px -10px hsl(281 83% 57% / 0.5);
+    --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.3);
+
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -101,5 +113,41 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .animate-spotlight {
+    animation: spotlight 2s ease .75s 1 forwards;
+  }
+  
+  .animate-meteor-effect {
+    animation: meteor 5s linear infinite;
+  }
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%,-40%) scale(1);
+  }
+}
+
+@keyframes meteor {
+  0% {
+    transform: rotate(215deg) translateX(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(215deg) translateX(-500px);
+    opacity: 0;
   }
 }
