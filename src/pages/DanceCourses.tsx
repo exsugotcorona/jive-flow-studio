@@ -2,13 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Calendar } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { motion } from "framer-motion";
 import { Meteors } from "@/components/ui/meteors";
+import { useAuth } from "@/hooks/useAuth";
 
 const DanceCourses = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const courses = [
     {
       level: "Basic",
@@ -71,12 +74,18 @@ const DanceCourses = () => {
 
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
-  const createPayment = async (course: typeof courses[number]) => {
+  const enrollInCourse = async (course: typeof courses[number]) => {
+    if (!user) {
+      toast.error("Please sign in to enroll in courses");
+      navigate("/auth");
+      return;
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke("instamojo-create-payment", {
         body: {
           amount: parseAmount(course.price),
-          purpose: course.title,
+          purpose: `${course.title} - Dance Course`,
           product_id: course.level,
           product_type: "course",
           redirect_url: `${window.location.origin}/payment/success`,
@@ -88,10 +97,10 @@ const DanceCourses = () => {
       if (url) {
         window.location.href = url;
       } else {
-        toast.error("Failed to start payment. Please try again.");
+        toast.error("Failed to start enrollment. Please try again.");
       }
     } catch (e: any) {
-      toast.error(e?.message || "Payment error");
+      toast.error(e?.message || "Enrollment error");
     }
   };
 
@@ -181,7 +190,7 @@ const DanceCourses = () => {
                   <CardFooter>
                     <Button 
                       className="w-full bg-gradient-to-r from-primary to-primary-glow hover:shadow-[var(--shadow-elegant)] transition-all duration-300"
-                      onClick={() => createPayment(course)}
+                      onClick={() => enrollInCourse(course)}
                     >
                       Enroll Now
                     </Button>

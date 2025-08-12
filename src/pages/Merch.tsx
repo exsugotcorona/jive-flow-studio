@@ -6,8 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { motion } from "framer-motion";
 import { Meteors } from "@/components/ui/meteors";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Merch = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const products = [
     {
       id: 1,
@@ -43,6 +47,12 @@ const Merch = () => {
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
   const createPayment = async (product: typeof products[number]) => {
+    if (!user) {
+      toast.error("Please sign in to purchase items");
+      navigate("/auth");
+      return;
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke("instamojo-create-payment", {
         body: {
