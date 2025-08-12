@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { User, LogOut, Settings } from "lucide-react";
 
 export const FloatingNav = ({
   navItems,
@@ -17,6 +20,11 @@ export const FloatingNav = ({
 }) => {
   const location = useLocation();
   const [visible, setVisible] = useState(true);
+  const { user, isAdmin, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,6 +86,28 @@ export const FloatingNav = ({
             )}
           </Link>
         ))}
+        
+        {user ? (
+          <div className="flex items-center space-x-2">
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="ghost" size="sm" className="text-foreground hover:text-primary">
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </Link>
+            )}
+            <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-foreground hover:text-primary">
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <Link to="/auth">
+            <Button variant="ghost" size="sm" className="text-foreground hover:text-primary">
+              <User className="h-4 w-4 mr-1" />
+              <span className="hidden sm:block">Sign In</span>
+            </Button>
+          </Link>
+        )}
       </motion.div>
     </AnimatePresence>
   );

@@ -11,61 +11,34 @@ const Merch = () => {
   const products = [
     {
       id: 1,
-      name: "DancePlanet T-Shirt",
-      description: "Premium cotton t-shirt with our signature logo. Perfect for practice sessions.",
+      name: "DancePlanet Classic T-Shirt",
+      description: "Premium cotton t-shirt with our signature logo. Perfect for practice sessions and casual wear.",
       price: "₹1,800",
       image: "/placeholder.svg",
       category: "Apparel",
-      sizes: ["S", "M", "L", "XL"]
-    },
-    {
-      id: 2,
-      name: "Dance Practice Shoes",
-      description: "Professional suede-soled shoes designed specifically for jive and swing dancing.",
-      price: "₹6,500",
-      image: "/placeholder.svg", 
-      category: "Footwear",
-      sizes: ["6", "7", "8", "9", "10", "11"]
-    },
-    {
-      id: 3,
-      name: "DancePlanet Hoodie",
-      description: "Comfortable fleece hoodie for staying warm during practice or casual wear.",
-      price: "₹3,200",
-      image: "/placeholder.svg",
-      category: "Apparel", 
       sizes: ["S", "M", "L", "XL", "XXL"]
     },
     {
-      id: 4,
-      name: "Practice Skirt",
-      description: "Flowy practice skirt that moves beautifully with jive spins and turns.",
-      price: "₹2,500",
+      id: 2,
+      name: "DancePlanet Performance T-Shirt",
+      description: "Moisture-wicking performance t-shirt designed for intense dance sessions.",
+      price: "₹2,200",
       image: "/placeholder.svg",
       category: "Apparel",
-      sizes: ["XS", "S", "M", "L", "XL"]
+      sizes: ["S", "M", "L", "XL", "XXL"]
     },
     {
-      id: 5,
-      name: "Jive Music Collection",
-      description: "Curated playlist of classic and modern jive tracks for practice and performance.",
-      price: "₹999",
-      image: "/placeholder.svg",
-      category: "Music",
-      sizes: ["Digital Download"]
-    },
-    {
-      id: 6,
-      name: "Dance Bag",
-      description: "Spacious bag with compartments for shoes, clothes, and accessories.",
-      price: "₹4,000",
+      id: 3,
+      name: "DancePlanet Tote Bag",
+      description: "Spacious canvas tote bag with the DancePlanet logo. Perfect for carrying your dance essentials.",
+      price: "₹1,500",
       image: "/placeholder.svg",
       category: "Accessories",
       sizes: ["One Size"]
     }
   ];
 
-  const categories = ["All", "Apparel", "Footwear", "Music", "Accessories"];
+  const categories = ["All", "Apparel", "Accessories"];
 
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
