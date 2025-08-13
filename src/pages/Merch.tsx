@@ -6,11 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { motion } from "framer-motion";
 import { Meteors } from "@/components/ui/meteors";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 
 const Merch = () => {
-  const { user } = useAuth();
+  const { isSignedIn } = useUser();
   const navigate = useNavigate();
   const products = [
     {
@@ -47,7 +47,7 @@ const Merch = () => {
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
   const createPayment = async (product: typeof products[number]) => {
-    if (!user) {
+    if (!isSignedIn) {
       toast.error("Please sign in to purchase items");
       navigate("/auth");
       return;
