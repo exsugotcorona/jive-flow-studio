@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
-import { useUser, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { User, LogOut, Settings } from "lucide-react";
+import { User, LogOut } from "lucide-react";
 
 export const FloatingNav = ({
   navItems,
@@ -20,8 +20,7 @@ export const FloatingNav = ({
 }) => {
   const location = useLocation();
   const [visible, setVisible] = useState(true);
-  const { user } = useUser();
-  const isAdmin = user?.publicMetadata?.role === 'admin' || user?.emailAddresses[0]?.emailAddress === 'admin@example.com';
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -84,28 +83,32 @@ export const FloatingNav = ({
           </Link>
         ))}
         
-            {/* Authentication buttons */}
-            <SignedOut>
-              <Link
-                to="/auth"
-                className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-              >
-                Sign In
-              </Link>
-            </SignedOut>
-            <SignedIn>
-              <div className="flex items-center space-x-2">
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className="text-sm font-medium px-3 py-2 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                  >
-                    Admin
-                  </Link>
-                )}
-                <UserButton afterSignOutUrl="/" />
-              </div>
-            </SignedIn>
+        {/* Authentication buttons */}
+        {!user ? (
+          <Link
+            to="/auth"
+            className="text-sm font-medium px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            Sign In
+          </Link>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Link
+              to="/admin"
+              className="text-sm font-medium px-3 py-2 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+            >
+              <User className="h-4 w-4" />
+            </Link>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => signOut()}
+              className="text-sm font-medium px-3 py-2"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   );

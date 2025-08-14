@@ -1,77 +1,103 @@
-import { SignIn, SignUp, useUser } from "@clerk/clerk-react";
-import { Navigate } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ModernHero } from "@/components/ui/modern-hero";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/components/ui/sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 const Auth = () => {
-  const { isSignedIn } = useUser();
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signIn, signUp, user } = useAuth();
+  const navigate = useNavigate();
 
-  // Redirect if already signed in
-  if (isSignedIn) {
-    return <Navigate to="/" replace />;
-  }
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = isSignUp 
+        ? await signUp(email, password)
+        : await signIn(email, password);
+
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success(isSignUp ? "Check your email to confirm your account" : "Welcome back!");
+        if (!isSignUp) {
+          navigate("/");
+        }
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
-      <ModernHero 
-        title="Welcome Back" 
-        subtitle="Sign in to access your dance journey"
-      />
-      
-      <div className="container mx-auto px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-md mx-auto"
-        >
-          <Card className="border-primary/20 bg-card/95 backdrop-blur-sm">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold">Authentication</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="signin" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="signin">Sign In</TabsTrigger>
-                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="signin" className="mt-6">
-                  <div className="flex justify-center">
-                    <SignIn 
-                      fallbackRedirectUrl="/"
-                      signUpUrl="/auth"
-                      appearance={{
-                        elements: {
-                          rootBox: "w-full",
-                          card: "shadow-none border-0 bg-transparent",
-                        }
-                      }}
-                    />
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="signup" className="mt-6">
-                  <div className="flex justify-center">
-                    <SignUp 
-                      fallbackRedirectUrl="/"
-                      signInUrl="/auth"
-                      appearance={{
-                        elements: {
-                          rootBox: "w-full",
-                          card: "shadow-none border-0 bg-transparent",
-                        }
-                      }}
-                    />
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-primary/10 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">
+            {isSignUp ? "Create Account" : "Welcome Back"}
+          </CardTitle>
+          <CardDescription>
+            {isSignUp 
+              ? "Sign up to join Dance Planet" 
+              : "Sign in to your account"
+            }
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Loading..." : (isSignUp ? "Sign Up" : "Sign In")}
+            </Button>
+          </form>
+          <div className="mt-4 text-center">
+            <Button
+              variant="link"
+              onClick={() => setIsSignUp(!isSignUp)}
+            >
+              {isSignUp 
+                ? "Already have an account? Sign in" 
+                : "Don't have an account? Sign up"
+              }
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

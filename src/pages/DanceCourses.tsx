@@ -7,10 +7,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { motion } from "framer-motion";
 import { Meteors } from "@/components/ui/meteors";
-import { useUser } from "@clerk/clerk-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const DanceCourses = () => {
-  const { isSignedIn } = useUser();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const courses = [
     {
@@ -75,7 +75,7 @@ const DanceCourses = () => {
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
   const enrollInCourse = async (course: typeof courses[number]) => {
-    if (!isSignedIn) {
+    if (!user) {
       toast.error("Please sign in to enroll in courses");
       navigate("/auth");
       return;
