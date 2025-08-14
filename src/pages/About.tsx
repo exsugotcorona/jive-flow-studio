@@ -1,4 +1,6 @@
 import { ModernHero } from "@/components/ui/modern-hero";
+import { ModernCard } from "@/components/ui/modern-card";
+import { ModernSection } from "@/components/ui/modern-section";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -59,167 +61,172 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background/95 to-primary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-primary/10">
       <ModernHero 
         title="About Dance Planet" 
         subtitle="Pure happiness! This is what dancing is all about.."
       />
       
-      <div className="container mx-auto px-4 py-16 space-y-16">
+      <div className="container mx-auto px-4 py-16 space-y-24">
         {/* Stats Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <Card className="border-primary/20 bg-card/95 backdrop-blur-sm text-center hover:shadow-lg transition-all duration-300">
-                <CardContent className="p-6">
-                  <stat.icon className="h-8 w-8 mx-auto mb-4 text-primary" />
-                  <h3 className="text-3xl font-bold text-primary mb-2">{stat.value}</h3>
-                  <p className="font-semibold mb-1">{stat.label}</p>
-                  <p className="text-sm text-muted-foreground">{stat.description}</p>
+        <ModernSection className="text-center">
+          <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Our Impact
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((stat, index) => (
+              <ModernCard
+                key={stat.label}
+                variant="glow"
+                meteors={index === 0}
+                className="text-center group hover:scale-105 transition-transform duration-300"
+              >
+                <CardContent className="p-8">
+                  <stat.icon className="h-12 w-12 mx-auto mb-6 text-primary group-hover:animate-pulse" />
+                  <h3 className="text-4xl font-bold text-primary mb-3">{stat.value}</h3>
+                  <p className="font-semibold text-lg mb-2">{stat.label}</p>
+                  <p className="text-muted-foreground">{stat.description}</p>
                 </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.section>
+              </ModernCard>
+            ))}
+          </div>
+        </ModernSection>
 
         {/* Notable Clients Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl font-bold mb-8">Our Esteemed Clients</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+        <ModernSection className="text-center">
+          <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Our Esteemed Clients
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {notableClients.map((client, index) => (
-              <motion.div
+              <ModernCard
                 key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                variant="gradient"
+                className="group hover:scale-105 transition-all duration-300"
               >
-                <Badge variant="outline" className="text-lg p-4 w-full justify-center border-primary/30 hover:bg-primary/10 transition-colors">
-                  {client}
-                </Badge>
-              </motion.div>
+                <CardContent className="p-6">
+                  <p className="text-lg font-semibold text-center group-hover:text-primary transition-colors">
+                    {client}
+                  </p>
+                </CardContent>
+              </ModernCard>
             ))}
           </div>
-          <p className="text-muted-foreground mt-6 text-lg">& many many more..</p>
-        </motion.section>
+          <p className="text-muted-foreground mt-8 text-xl font-medium">& many many more..</p>
+        </ModernSection>
 
         {/* Social Media Presence */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl font-bold mb-8">Social Media Presence</h2>
+        <ModernSection className="text-center">
+          <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Social Media Presence
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {socialMediaStats.map((social, index) => (
-              <motion.div
+              <ModernCard
                 key={social.platform}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                variant="glow"
+                meteors={social.platform === "Facebook"}
+                className="text-center group hover:scale-105 transition-transform duration-300"
               >
-                <Card className="border-primary/20 bg-card/95 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
-                  <CardContent className="p-6 text-center">
-                    <social.icon className="h-8 w-8 mx-auto mb-4 text-primary" />
-                    <h3 className="text-xl font-bold mb-2">{social.platform}</h3>
-                    <p className="text-2xl font-bold text-primary mb-1">{social.followers}</p>
-                    {social.likes && (
-                      <p className="text-lg font-semibold text-primary/80 mb-2">{social.likes}</p>
-                    )}
-                    <p className="text-sm text-muted-foreground">{social.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                <CardContent className="p-8">
+                  <social.icon className="h-12 w-12 mx-auto mb-6 text-primary group-hover:animate-pulse" />
+                  <h3 className="text-xl font-bold mb-3">{social.platform}</h3>
+                  <p className="text-3xl font-bold text-primary mb-2">{social.followers}</p>
+                  {social.likes && (
+                    <p className="text-lg font-semibold text-primary/80 mb-3">{social.likes}</p>
+                  )}
+                  <p className="text-muted-foreground">{social.description}</p>
+                </CardContent>
+              </ModernCard>
             ))}
           </div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mt-8"
+          <ModernCard
+            variant="gradient"
+            className="mt-12 max-w-3xl mx-auto hover:scale-105 transition-transform duration-300"
           >
-            <Card className="border-primary/20 bg-gradient-to-r from-primary/10 to-primary/5 backdrop-blur-sm max-w-2xl mx-auto">
-              <CardContent className="p-6">
-                <p className="text-lg font-semibold text-center">
-                  Our videos have crossed over <span className="text-primary font-bold">20 million views</span> & are widely shared on social media.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </motion.section>
+            <CardContent className="p-8">
+              <p className="text-xl font-semibold text-center">
+                Our videos have crossed over <span className="text-primary font-bold text-2xl">20 million views</span> & are widely shared on social media.
+              </p>
+            </CardContent>
+          </ModernCard>
+        </ModernSection>
 
         {/* Founder Section */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl font-bold mb-8">Meet Our Founder</h2>
-          <Card className="border-primary/20 bg-card/95 backdrop-blur-sm max-w-4xl mx-auto">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-primary mb-4">Lillian Mendes</h3>
-              <p className="text-lg text-muted-foreground mb-6">Founder and Principal Choreographer</p>
-              <p className="text-lg mb-8 leading-relaxed">
-                A recognized name in the industry, Lillian has focused on making Dance Planet the choice for 
-                celebrities, recording artists, international personalities & dance companies.
-              </p>
-              
-              <div className="space-y-4">
-                <h4 className="text-xl font-semibold mb-4">Major Productions</h4>
-                <div className="flex flex-wrap justify-center gap-3">
-                  {majorProductions.map((production, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.4, delay: index * 0.1 }}
-                    >
-                      <Badge variant="secondary" className="text-sm p-2">
-                        {production}
-                      </Badge>
-                    </motion.div>
-                  ))}
+        <ModernSection className="text-center">
+          <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            Meet Our Founder
+          </h2>
+          <ModernCard 
+            variant="glow" 
+            meteors={true}
+            className="max-w-6xl mx-auto overflow-hidden group hover:scale-[1.02] transition-transform duration-500"
+          >
+            <CardContent className="p-0">
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                {/* Image Section */}
+                <div className="relative overflow-hidden">
+                  <img 
+                    src="/lovable-uploads/9d6885e4-f63a-482d-b9ec-9caa04c30a4d.png"
+                    alt="Lillian Mendes - Founder and Principal Choreographer"
+                    className="w-full h-[500px] object-cover rounded-l-lg group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
-                <p className="text-muted-foreground mt-4 text-lg">& lots more.</p>
+                
+                {/* Content Section */}
+                <div className="p-8 text-left">
+                  <h3 className="text-4xl font-bold text-primary mb-4">Lillian Mendes</h3>
+                  <p className="text-xl text-muted-foreground mb-8 font-medium">Founder and Principal Choreographer</p>
+                  <p className="text-lg mb-8 leading-relaxed">
+                    A recognized name in the industry, Lillian has focused on making Dance Planet the choice for 
+                    celebrities, recording artists, international personalities & dance companies.
+                  </p>
+                  
+                  <div className="space-y-6">
+                    <h4 className="text-2xl font-semibold mb-6 text-primary">Major Productions</h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      {majorProductions.map((production, index) => (
+                        <ModernCard
+                          key={index}
+                          variant="gradient"
+                          className="hover:scale-105 transition-transform duration-300"
+                        >
+                          <CardContent className="p-4">
+                            <p className="text-sm font-medium text-center">
+                              {production}
+                            </p>
+                          </CardContent>
+                        </ModernCard>
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground text-lg font-medium">& lots more.</p>
+                  </div>
+                </div>
               </div>
             </CardContent>
-          </Card>
-        </motion.section>
+          </ModernCard>
+        </ModernSection>
 
         {/* Mission Statement */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="text-center"
-        >
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-secondary/10 backdrop-blur-sm max-w-3xl mx-auto">
-            <CardContent className="p-8">
-              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
-              <p className="text-xl leading-relaxed">
+        <ModernSection className="text-center">
+          <ModernCard 
+            variant="gradient" 
+            meteors={true}
+            className="max-w-4xl mx-auto hover:scale-[1.02] transition-transform duration-500"
+          >
+            <CardContent className="p-12">
+              <h2 className="text-4xl font-bold mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                Our Mission
+              </h2>
+              <p className="text-xl leading-relaxed text-muted-foreground">
                 At Dance Planet, we believe that dance is pure happiness. We welcome everyone from teenagers to seniors 
                 and everyone in between, creating a vibrant community where passion for dance brings people together. 
                 Our goal is to spread joy through movement and help every student discover their unique dance journey.
               </p>
             </CardContent>
-          </Card>
-        </motion.section>
+          </ModernCard>
+        </ModernSection>
       </div>
     </div>
   );
