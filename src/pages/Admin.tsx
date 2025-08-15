@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { AdminDashboard } from "@/components/admin/AdminDashboard";
+import { LogOut } from "lucide-react";
 
 const Admin = () => {
   const { user, signOut } = useAuth();
@@ -18,25 +19,34 @@ const Admin = () => {
     return null;
   }
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-primary/10 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Admin Dashboard</CardTitle>
-          <CardDescription>
-            <p className="text-muted-foreground">Welcome, {user.email}!</p>
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="min-h-screen">
+      {/* Admin Header */}
+      <header className="bg-card border-b border-border p-4">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <div>
+            <h1 className="text-xl font-semibold">Admin Panel</h1>
+            <p className="text-sm text-muted-foreground">Welcome, {user.email}</p>
+          </div>
           <Button 
-            onClick={() => signOut()}
+            onClick={handleSignOut}
             variant="outline" 
-            className="w-full"
+            size="sm"
+            className="flex items-center gap-2"
           >
+            <LogOut className="h-4 w-4" />
             Sign Out
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </header>
+
+      {/* Dashboard Content */}
+      <AdminDashboard />
     </div>
   );
 };
