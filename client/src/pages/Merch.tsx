@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
 // Removed Supabase import - now using server API
@@ -25,12 +32,12 @@ const ProductCarousel = ({ images }: { images: string[] }) => {
   return (
     <div className="relative group">
       <div className="aspect-square bg-background rounded-lg overflow-hidden relative">
-        <img 
-          src={images[currentIndex]} 
+        <img
+          src={images[currentIndex]}
           alt="Product image"
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        
+
         {images.length > 1 && (
           <>
             <Button
@@ -49,13 +56,13 @@ const ProductCarousel = ({ images }: { images: string[] }) => {
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
-            
+
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
               {images.map((_, index) => (
                 <button
                   key={index}
                   className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentIndex ? 'bg-primary' : 'bg-white/50'
+                    index === currentIndex ? "bg-primary" : "bg-white/50"
                   }`}
                   onClick={() => setCurrentIndex(index)}
                 />
@@ -75,46 +82,47 @@ const Merch = () => {
     {
       id: 1,
       name: "Jive Being T-Shirt - Black",
-      description: "100% Organic Spirited Flow. Premium black t-shirt with the iconic 'Jive Being' design. Perfect for expressing your dance spirit.",
-      price: "₹1,800",
+      description:
+        "100% Organic Spirited Flow. Premium black t-shirt with the iconic 'Jive Being' design. Perfect for expressing your dance spirit.",
+      price: "₹599",
       images: [
         "/lovable-uploads/ffd76e88-7195-4bbb-bd98-c472ec762780.png",
         "/lovable-uploads/7ecd3a23-4e1e-4be4-b3ff-6752bf184695.png",
-        "/lovable-uploads/5b56d68e-4573-4a10-9688-2b761008d52c.png"
+        "/lovable-uploads/5b56d68e-4573-4a10-9688-2b761008d52c.png",
       ],
       category: "Apparel",
-      sizes: ["S", "M", "L", "XL", "XXL"]
+      sizes: ["S", "M", "L", "XL", "XXL"],
     },
     {
       id: 2,
       name: "Jive Being T-Shirt - White",
-      description: "100% Organic Spirited Flow. Premium white t-shirt with the iconic 'Jive Being' design. Made with love and powered by coffee & beats.",
-      price: "₹1,800",
+      description:
+        "100% Organic Spirited Flow. Premium white t-shirt with the iconic 'Jive Being' design. Made with love and powered by coffee & beats.",
+      price: "₹599",
       images: [
         "/lovable-uploads/8a2c494d-d467-4a55-a8b8-1f7a676505c4.png",
-        "/lovable-uploads/f182330d-30e8-4b75-94d0-9a7b121d66c8.png"
+        "/lovable-uploads/f182330d-30e8-4b75-94d0-9a7b121d66c8.png",
       ],
       category: "Apparel",
-      sizes: ["S", "M", "L", "XL", "XXL"]
+      sizes: ["S", "M", "L", "XL", "XXL"],
     },
     {
       id: 3,
       name: "Jive Being Tote Bag",
-      description: "100% Organic Spirited Flow tote bag. Spacious canvas bag with the 'Jive Being' design. Perfect for carrying your dance essentials with style.",
-      price: "₹1,200",
-      images: [
-        "/lovable-uploads/1aefbaa9-cb4f-442c-818a-9f7d5d376c0e.png"
-      ],
+      description:
+        "100% Organic Spirited Flow tote bag. Spacious canvas bag with the 'Jive Being' design. Perfect for carrying your dance essentials with style.",
+      price: "₹10",
+      images: ["/lovable-uploads/1aefbaa9-cb4f-442c-818a-9f7d5d376c0e.png"],
       category: "Accessories",
-      sizes: ["One Size"]
-    }
+      sizes: ["One Size"],
+    },
   ];
 
   const categories = ["All", "Apparel", "Accessories"];
 
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
-  const createPayment = async (product: typeof products[number]) => {
+  const createPayment = async (product: (typeof products)[number]) => {
     if (!user) {
       toast.error("Please sign in to purchase items");
       navigate("/auth");
@@ -122,10 +130,10 @@ const Merch = () => {
     }
 
     try {
-      const response = await fetch('/api/payment/create', {
-        method: 'POST',
+      const response = await fetch("/api/payment/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           amount: parseAmount(product.price),
@@ -161,11 +169,11 @@ const Merch = () => {
             className="space-y-6"
           >
             <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground">
-              DancePlanet <span className="text-primary">Merchandise</span>
+              Dance Planet <span className="text-primary">Merchandise</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Get equipped with high-quality dance apparel, shoes, and accessories. 
-              Everything you need to look and feel great while dancing.
+              Take the Jive with you—on your clothes, in your bag, on your desk,
+              and even on your fridge!
             </p>
           </motion.div>
         </div>
@@ -192,7 +200,11 @@ const Merch = () => {
                 <Button
                   variant={category === "All" ? "default" : "outline"}
                   size="sm"
-                  className={category === "All" ? "bg-gradient-to-r from-primary to-primary-glow" : "hover:border-primary/50"}
+                  className={
+                    category === "All"
+                      ? "bg-gradient-to-r from-primary to-primary-glow"
+                      : "hover:border-primary/50"
+                  }
                 >
                   {category}
                 </Button>
@@ -219,7 +231,10 @@ const Merch = () => {
                   <CardHeader>
                     <ProductCarousel images={product.images} />
                     <div className="flex items-center justify-between">
-                      <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                      <Badge
+                        variant="secondary"
+                        className="bg-primary/10 text-primary border-primary/20"
+                      >
                         {product.category}
                       </Badge>
                       <span className="text-xl font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">
@@ -236,10 +251,16 @@ const Merch = () => {
 
                   <CardContent className="flex-grow">
                     <div>
-                      <h4 className="font-medium mb-2 text-foreground">Available Sizes:</h4>
+                      <h4 className="font-medium mb-2 text-foreground">
+                        Available Sizes:
+                      </h4>
                       <div className="flex flex-wrap gap-2">
                         {product.sizes.map((size) => (
-                          <Badge key={size} variant="outline" className="text-xs border-primary/30 hover:border-primary/50">
+                          <Badge
+                            key={size}
+                            variant="outline"
+                            className="text-xs border-primary/30 hover:border-primary/50"
+                          >
                             {size}
                           </Badge>
                         ))}
@@ -248,8 +269,8 @@ const Merch = () => {
                   </CardContent>
 
                   <CardFooter>
-                    <Button 
-                      className="w-full bg-gradient-to-r from-primary to-primary-glow hover:shadow-[var(--shadow-elegant)] transition-all duration-300" 
+                    <Button
+                      className="w-full bg-gradient-to-r from-primary to-primary-glow hover:shadow-[var(--shadow-elegant)] transition-all duration-300"
                       onClick={() => createPayment(product)}
                     >
                       <ShoppingCart className="h-4 w-4 mr-2" />
@@ -279,16 +300,19 @@ const Merch = () => {
               {[
                 {
                   title: "Free Shipping",
-                  description: "Free shipping on orders over ₹5,000 within India."
+                  description:
+                    "Free shipping on orders over ₹5,000 within India.",
                 },
                 {
-                  title: "Easy Returns", 
-                  description: "30-day return policy on all merchandise in original condition."
+                  title: "Easy Returns",
+                  description:
+                    "30-day return policy on all merchandise in original condition.",
                 },
                 {
                   title: "Student Discount",
-                  description: "Current students receive 15% off all merchandise purchases."
-                }
+                  description:
+                    "Current students receive 15% off all merchandise purchases.",
+                },
               ].map((info, index) => (
                 <motion.div
                   key={info.title}
@@ -298,7 +322,9 @@ const Merch = () => {
                   viewport={{ once: true }}
                   className="bg-background/50 backdrop-blur-sm p-6 rounded-lg border border-border/50"
                 >
-                  <h3 className="font-semibold mb-2 text-foreground">{info.title}</h3>
+                  <h3 className="font-semibold mb-2 text-foreground">
+                    {info.title}
+                  </h3>
                   <p className="text-muted-foreground leading-relaxed">
                     {info.description}
                   </p>

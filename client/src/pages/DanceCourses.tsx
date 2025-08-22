@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Users, Calendar } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,7 +23,8 @@ const DanceCourses = () => {
     {
       level: "Basic",
       title: "Jive Fundamentals",
-      description: "Perfect for complete beginners. Learn the essential jive steps, basic timing, and partner connection in a fun and supportive environment.",
+      description:
+        "Perfect for complete beginners. Learn the essential jive steps, basic timing, and partner connection in a fun and supportive environment.",
       duration: "6 weeks",
       classSize: "8-12 students",
       schedule: "Tuesdays 7:00-8:00 PM",
@@ -26,15 +34,16 @@ const DanceCourses = () => {
         "Rock step and chasse",
         "Simple turns and spins",
         "Partner connection basics",
-        "Footwork fundamentals"
-      ]
+        "Footwork fundamentals",
+      ],
     },
     {
       level: "Intermediate",
-      title: "Jive Development", 
-      description: "Build on your foundation with more complex moves, improved technique, and better musicality. Prerequisite: Basic level completion.",
+      title: "Jive Development",
+      description:
+        "Build on your foundation with more complex moves, improved technique, and better musicality. Prerequisite: Basic level completion.",
       duration: "8 weeks",
-      classSize: "6-10 students", 
+      classSize: "6-10 students",
       schedule: "Thursdays 7:30-8:30 PM",
       price: "₹12,000",
       features: [
@@ -42,39 +51,44 @@ const DanceCourses = () => {
         "Multiple spin combinations",
         "Lead and follow refinement",
         "Musical interpretation",
-        "Style and expression"
-      ]
+        "Style and expression",
+      ],
     },
     {
       level: "Advanced",
       title: "Jive Mastery",
-      description: "Master complex combinations and develop your unique style. Focus on performance quality and competition preparation.",
+      description:
+        "Master complex combinations and develop your unique style. Focus on performance quality and competition preparation.",
       duration: "10 weeks",
       classSize: "4-8 students",
-      schedule: "Saturdays 6:00-7:30 PM", 
+      schedule: "Saturdays 6:00-7:30 PM",
       price: "₹18,000",
       features: [
         "Complex combination sequences",
         "Performance techniques",
-        "Individual style development", 
+        "Individual style development",
         "Competition choreography",
-        "Teaching methodology basics"
-      ]
-    }
+        "Teaching methodology basics",
+      ],
+    },
   ];
 
   const getBadgeVariant = (level: string) => {
     switch (level) {
-      case "Basic": return "secondary";
-      case "Intermediate": return "default"; 
-      case "Advanced": return "destructive";
-      default: return "secondary";
+      case "Basic":
+        return "secondary";
+      case "Intermediate":
+        return "default";
+      case "Advanced":
+        return "destructive";
+      default:
+        return "secondary";
     }
   };
 
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
 
-  const enrollInCourse = async (course: typeof courses[number]) => {
+  const enrollInCourse = async (course: (typeof courses)[number]) => {
     if (!user) {
       toast.error("Please sign in to enroll in courses");
       navigate("/auth");
@@ -82,10 +96,10 @@ const DanceCourses = () => {
     }
 
     try {
-      const response = await fetch('/api/payment/create', {
-        method: 'POST',
+      const response = await fetch("/api/payment/create", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           amount: parseAmount(course.price),
@@ -102,7 +116,9 @@ const DanceCourses = () => {
       if (response.ok && data.url) {
         window.location.href = data.url;
       } else {
-        toast.error(data.error || "Failed to start enrollment. Please try again.");
+        toast.error(
+          data.error || "Failed to start enrollment. Please try again.",
+        );
       }
     } catch (e: any) {
       toast.error(e?.message || "Enrollment error");
@@ -122,11 +138,13 @@ const DanceCourses = () => {
             className="space-y-6"
           >
             <h1 className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground">
-              Jive Dance <span className="text-primary">Courses</span>
+              Social Jive Dance <span className="text-primary">Courses</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Discover the joy of jive dancing through our structured learning program. 
-              Each level builds upon the previous, ensuring steady progress and confidence.
+              Ready to start your SOCIAL Jive Journey? From your very first step
+              to your fastest spin, our structured course takes you through
+              beginner, intermediate, and advanced levels with ease. Learn,
+              grow, and dance with confidence—one class at a time.
             </p>
           </motion.div>
         </div>
@@ -180,10 +198,15 @@ const DanceCourses = () => {
                     </div>
 
                     <div>
-                      <h4 className="font-medium mb-3 text-foreground">What You'll Learn:</h4>
+                      <h4 className="font-medium mb-3 text-foreground">
+                        What You'll Learn:
+                      </h4>
                       <ul className="space-y-2">
                         {course.features.map((feature, index) => (
-                          <li key={index} className="text-sm text-muted-foreground flex items-start">
+                          <li
+                            key={index}
+                            className="text-sm text-muted-foreground flex items-start"
+                          >
                             <span className="text-primary mr-2">•</span>
                             {feature}
                           </li>
@@ -193,7 +216,7 @@ const DanceCourses = () => {
                   </CardContent>
 
                   <CardFooter>
-                    <Button 
+                    <Button
                       className="w-full bg-gradient-to-r from-primary to-primary-glow hover:shadow-[var(--shadow-elegant)] transition-all duration-300"
                       onClick={() => enrollInCourse(course)}
                     >
@@ -217,15 +240,20 @@ const DanceCourses = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
-              Ready to Start Your <span className="text-primary">Jive Journey</span>?
+              Ready to Start Your{" "}
+              <span className="text-primary">Jive Journey</span>?
             </h2>
             <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
-              All courses include practice music, step-by-step instruction, and ongoing support. 
-              Students can repeat any level at a 50% discount to perfect their skills.
+              All courses include practice music, step-by-step instruction, and
+              ongoing support. Students can repeat any level at a 50% discount
+              to perfect their skills.
             </p>
             <div className="text-center">
               <Link to="/contact">
-                <Button size="lg" className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-[var(--shadow-elegant)] transition-all duration-300 px-8 py-6 text-lg">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-primary to-primary-glow hover:shadow-[var(--shadow-elegant)] transition-all duration-300 px-8 py-6 text-lg"
+                >
                   Contact Us
                 </Button>
               </Link>
