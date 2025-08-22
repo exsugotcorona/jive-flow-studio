@@ -1,9 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { db } from "./db";
-import { profiles } from "../shared/schema";
-import { eq, sql } from "drizzle-orm";
+import { supabase } from "./db";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
@@ -104,17 +102,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Email is required" });
       }
       
-      const [profile] = await db.select().from(profiles).where(eq(profiles.email, String(email)));
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('email', String(email))
+        .limit(1);
       
-      if (!profile) {
+      if (error) {
+        return res.status(500).json({ error: error.message });
+      }
+      
+      if (!profiles || profiles.length === 0) {
         // Create a profile with just the email if it doesn't exist
-        const [newProfile] = await db.insert(profiles)
-          .values({ email: String(email) })
-          .returning();
+        const { data: newProfile, error: insertError } = await supabase
+          .from('profiles')
+          .insert({ email: String(email) })
+          .select()
+          .single();
+          
+        if (insertError) {
+          return res.status(500).json({ error: insertError.message });
+        }
         return res.json(newProfile);
       }
       
-      res.json(profile);
+      res.json(profiles[0]);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -127,17 +139,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Email is required" });
       }
       
-      const [updatedProfile] = await db.update(profiles)
-        .set({ 
+      const { data: updatedProfile, error } = await supabase
+        .from('profiles')
+        .update({ 
           username: username || null,
-          phoneNumber: phoneNumber || null,
-          updatedAt: sql`now()`
+          phone_number: phoneNumber || null,
+          updated_at: new Date().toISOString()
         })
-        .where(eq(profiles.email, email))
-        .returning();
+        .eq('email', email)
+        .select()
+        .single();
       
-      if (!updatedProfile) {
-        return res.status(404).json({ error: "Profile not found" });
+      if (error) {
+        if (error.code === 'PGRST116') {
+          return res.status(404).json({ error: "Profile not found" });
+        }
+        return res.status(500).json({ error: error.message });
       }
       
       res.json(updatedProfile);
