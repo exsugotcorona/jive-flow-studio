@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { db } from "./db";
-import { profiles, userRoles, siteSettings } from "../shared/schema";
+// Removed admin-related schema imports
 import { eq, sql } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -96,45 +96,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Site settings routes
-  app.get("/api/settings", async (req, res) => {
-    try {
-      const settings = await db.select().from(siteSettings);
-      const settingsObj = settings.reduce((acc, setting) => {
-        acc[setting.key] = setting.value;
-        return acc;
-      }, {} as Record<string, any>);
-      res.json(settingsObj);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  app.post("/api/settings/:key", async (req, res) => {
-    try {
-      const { key } = req.params;
-      const value = req.body;
-      
-      await db.insert(siteSettings)
-        .values({
-          key,
-          value,
-          updatedBy: null, // TODO: Add user ID when auth is fully implemented
-        })
-        .onConflictDoUpdate({
-          target: siteSettings.key,
-          set: {
-            value,
-            updatedAt: sql`now()`,
-          },
-        });
-      
-      res.json({ success: true });
-    } catch (error: any) {
-      console.error('Error saving setting:', error);
-      res.status(500).json({ error: error.message });
-    }
-  });
+  // Removed admin settings routes
 
   const httpServer = createServer(app);
   return httpServer;
