@@ -5,7 +5,8 @@ import { cn } from "@/lib/utils";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { User, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { UserProfileDropdown } from "../UserProfileDropdown";
 
 export const FloatingNav = ({
   navItems,
@@ -93,20 +94,7 @@ export const FloatingNav = ({
           </Link>
         ) : (
           <div className="flex items-center space-x-2">
-            <Link
-              to="/admin"
-              className="text-sm font-medium px-3 py-2 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-            >
-              <User className="h-4 w-4" />
-            </Link>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => signOut()}
-              className="text-sm font-medium px-3 py-2"
-            >
-              <LogOut className="h-4 w-4" />
-            </Button>
+            <UserProfileDropdown />
           </div>
         )}
       </motion.div>

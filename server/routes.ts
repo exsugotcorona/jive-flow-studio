@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { db } from "./db";
-// Removed admin-related schema imports
+import { profiles } from "../shared/schema";
 import { eq, sql } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -96,7 +96,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Removed admin settings routes
+    // User profile routes
+  app.get("/api/profile", async (req, res) => {
+    try {
+      const { email } = req.query;
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+      
+      const [profile] = await db.select().from(profiles).where(eq(profiles.email, String(email)));
+      
+      if (!profile) {
+        // Create a profile with just the email if it doesn't exist
+        const [newProfile] = await db.insert(profiles)
+          .values({ email: String(email) })
+          .returning();
+        return res.json(newProfile);
+      }
+      
+      res.json(profile);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.put("/api/profile", async (req, res) => {
+    try {
+      const { email, username, phoneNumber } = req.body;
+      if (!email) {
+        return res.status(400).json({ error: "Email is required" });
+      }
+      
+      const [updatedProfile] = await db.update(profiles)
+        .set({ 
+          username: username || null,
+          phoneNumber: phoneNumber || null,
+          updatedAt: sql`now()`
+        })
+        .where(eq(profiles.email, email))
+        .returning();
+      
+      if (!updatedProfile) {
+        return res.status(404).json({ error: "Profile not found" });
+      }
+      
+      res.json(updatedProfile);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
