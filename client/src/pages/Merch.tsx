@@ -14,8 +14,10 @@ import { toast } from "@/components/ui/sonner";
 import { motion } from "framer-motion";
 import { Meteors } from "@/components/ui/meteors";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Product Carousel Component
 const ProductCarousel = ({ images }: { images: string[] }) => {
@@ -77,7 +79,9 @@ const ProductCarousel = ({ images }: { images: string[] }) => {
 
 const Merch = () => {
   const { user } = useAuth();
+  const { addToCart } = useCart();
   const navigate = useNavigate();
+  const [selectedSizes, setSelectedSizes] = useState<{[key: number]: string}>({});
   const products = [
     {
       id: 1,
@@ -121,6 +125,29 @@ const Merch = () => {
   const categories = ["All", "Apparel", "Accessories"];
 
   const parseAmount = (price: string) => Number(price.replace(/[^\d]/g, ""));
+
+  const handleAddToCart = (product: (typeof products)[number]) => {
+    const selectedSize = selectedSizes[product.id];
+    
+    if (product.sizes.length > 1 && !selectedSize) {
+      toast.error('Please select a size');
+      return;
+    }
+    
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      size: selectedSize || product.sizes[0]
+    });
+    
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleSizeSelect = (productId: number, size: string) => {
+    setSelectedSizes(prev => ({ ...prev, [productId]: size }));
+  };
 
   const createPayment = async (product: (typeof products)[number]) => {
     if (!user) {
@@ -250,30 +277,47 @@ const Merch = () => {
                   </CardHeader>
 
                   <CardContent className="flex-grow">
-                    <div>
-                      <h4 className="font-medium mb-2 text-foreground">
-                        Available Sizes:
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-foreground">
+                        Size:
                       </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {product.sizes.map((size) => (
-                          <Badge
-                            key={size}
-                            variant="outline"
-                            className="text-xs border-primary/30 hover:border-primary/50"
-                          >
-                            {size}
-                          </Badge>
-                        ))}
-                      </div>
+                      {product.sizes.length > 1 ? (
+                        <Select onValueChange={(value) => handleSizeSelect(product.id, value)}>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select size" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {product.sizes.map((size) => (
+                              <SelectItem key={size} value={size}>
+                                {size}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Badge
+                          variant="outline"
+                          className="text-sm border-primary/30 w-fit"
+                        >
+                          {product.sizes[0]}
+                        </Badge>
+                      )}
                     </div>
                   </CardContent>
 
-                  <CardFooter>
+                  <CardFooter className="flex-col gap-2">
                     <Button
                       className="w-full bg-gradient-to-r from-primary to-primary-glow hover:shadow-[var(--shadow-elegant)] transition-all duration-300"
-                      onClick={() => createPayment(product)}
+                      onClick={() => handleAddToCart(product)}
                     >
                       <ShoppingCart className="h-4 w-4 mr-2" />
+                      Add to Cart
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full border-primary/30 hover:border-primary/50"
+                      onClick={() => createPayment(product)}
+                    >
                       Buy Now
                     </Button>
                   </CardFooter>

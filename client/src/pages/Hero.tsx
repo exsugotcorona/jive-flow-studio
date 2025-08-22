@@ -31,7 +31,7 @@ const Hero = () => {
           transition={{ duration: 0.8 }}
           className="space-y-6"
         >
-          <div className="text-5xl md:text-8xl font-extrabold leading-tight">
+          <div className="text-5xl md:text-8xl font-extrabold leading-normal py-2">
             <div className="bg-clip-text text-transparent bg-gradient-to-b from-foreground via-foreground/90 to-muted-foreground">
               Experience the joy of
             </div>
