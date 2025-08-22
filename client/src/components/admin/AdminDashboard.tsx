@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
+// Removed Supabase import - now using server API
 import { Settings, Users, Edit, Save, Globe, Phone, Mail, MapPin } from 'lucide-react';
 
 const siteSettingsSchema = z.object({
@@ -75,31 +75,15 @@ export const AdminDashboard = () => {
 
   const loadSiteSettings = async () => {
     try {
-      const { data, error } = await supabase
-        .from('site_settings')
-        .select('*');
-
-      if (error) throw error;
-
-      if (data && data.length > 0) {
-        // Update form with loaded data
-        data.forEach((setting) => {
-          if (setting.key === 'site_info' && setting.value) {
-            try {
-              const siteData = setting.value as SiteSettingsForm;
-              siteForm.reset(siteData);
-            } catch (error) {
-              console.error('Error parsing site settings:', error);
-            }
-          } else if (setting.key === 'hero_content' && setting.value) {
-            try {
-              const heroData = setting.value as HeroContentForm;
-              heroForm.reset(heroData);
-            } catch (error) {
-              console.error('Error parsing hero content:', error);
-            }
-          }
-        });
+      const response = await fetch('/api/settings');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.site_info) {
+          siteForm.reset(data.site_info);
+        }
+        if (data.hero_content) {
+          heroForm.reset(data.hero_content);
+        }
       }
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -109,22 +93,20 @@ export const AdminDashboard = () => {
   const saveSiteSettings = async (data: SiteSettingsForm) => {
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from('site_settings')
-        .upsert({
-          key: 'site_info',
-          value: data,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'key'
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: 'Success',
-        description: 'Site settings updated successfully',
+      const response = await fetch('/api/settings/site_info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       });
+      
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'Site settings updated successfully',
+        });
+      } else {
+        throw new Error('Failed to save settings');
+      }
     } catch (error) {
       console.error('Error saving settings:', error);
       toast({
@@ -140,22 +122,20 @@ export const AdminDashboard = () => {
   const saveHeroContent = async (data: HeroContentForm) => {
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from('site_settings')
-        .upsert({
-          key: 'hero_content',
-          value: data,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: 'key'
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: 'Success',
-        description: 'Hero content updated successfully',
+      const response = await fetch('/api/settings/hero_content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       });
+      
+      if (response.ok) {
+        toast({
+          title: 'Success',
+          description: 'Hero content updated successfully',
+        });
+      } else {
+        throw new Error('Failed to save hero content');
+      }
     } catch (error) {
       console.error('Error saving hero content:', error);
       toast({

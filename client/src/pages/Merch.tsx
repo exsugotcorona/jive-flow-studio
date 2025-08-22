@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+// Removed Supabase import - now using server API
 import { toast } from "@/components/ui/sonner";
 import { motion } from "framer-motion";
 import { Meteors } from "@/components/ui/meteors";
@@ -122,22 +122,26 @@ const Merch = () => {
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke("instamojo-create-payment", {
-        body: {
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           amount: parseAmount(product.price),
           purpose: product.name,
           product_id: product.id,
           product_type: "merch",
           redirect_url: `${window.location.origin}/payment/success`,
-        },
+          email: user.email,
+        }),
       });
 
-      if (error) throw error as any;
-      const url = (data as any)?.url;
-      if (url) {
-        window.location.href = url;
+      const data = await response.json();
+      if (response.ok && data.url) {
+        window.location.href = data.url;
       } else {
-        toast.error("Failed to start payment. Please try again.");
+        toast.error(data.error || "Failed to start payment. Please try again.");
       }
     } catch (e: any) {
       toast.error(e?.message || "Payment error");
