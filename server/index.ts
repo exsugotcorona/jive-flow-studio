@@ -1,6 +1,17 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+
+// Local log function to avoid importing from ./vite
+function log(message: string, source = "express") {
+  const formattedTime = new Date().toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
+
+  console.log(`${formattedTime} [${source}] ${message}`);
+}
 
 const app = express();
 app.use(express.json());
@@ -51,9 +62,25 @@ app.use((req, res, next) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (app.get("env") === "development") {
-    await setupVite(app, server);
+    try {
+      const { setupVite } = await import("./vite-safe");
+      await setupVite(app, server);
+      log("Vite development server started successfully");
+    } catch (e) {
+      log("Vite setup failed; running API only (frontend disabled)");
+      console.error("Vite setup error:", e);
+    }
   } else {
-    serveStatic(app);
+    try {
+      const { serveStatic } = await import("./vite-safe");
+      serveStatic(app);
+    } catch (e) {
+      // Fallback: serve prebuilt static if present, else API-only
+      const path = (await import("path")).default;
+      const fs = (await import("fs")).default;
+      const distPath = path.resolve(import.meta.dirname, "public");
+      if (fs.existsSync(distPath)) app.use(express.static(distPath));
+    }
   }
 
   // ALWAYS serve the app on port 5000

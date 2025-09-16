@@ -1,10 +1,10 @@
-import { createClient } from '@supabase/supabase-js';
+import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from "@neondatabase/serverless";
+import * as schema from "../shared/schema";
 
-// Use the correct Supabase URL - the environment variable seems to have the wrong format
-const supabaseUrl = "https://jopvqjrosznrtiyufowg.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpvcHZxanJvc3pucnRpeXVmb3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NDE0OTYsImV4cCI6MjA3MDQxNzQ5Nn0.IQqUccHL6_yfbGhE9fymjNxuw401C3AD2hIwsG45UIY";
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL environment variable is required");
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// For direct database queries, we'll use Supabase client instead of Drizzle
-export const db = supabase;
+const sql = neon(process.env.DATABASE_URL);
+export const db = drizzle(sql, { schema });

@@ -1,7 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { supabase } from "./db";
+import { db } from "./db";
+import { profiles } from "../shared/schema";
+import { eq } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
@@ -102,31 +104,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Email is required" });
       }
       
-      const { data: profiles, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('email', String(email))
+      const userProfiles = await db
+        .select()
+        .from(profiles)
+        .where(eq(profiles.email, String(email)))
         .limit(1);
       
-      if (error) {
-        return res.status(500).json({ error: error.message });
-      }
-      
-      if (!profiles || profiles.length === 0) {
+      if (userProfiles.length === 0) {
         // Create a profile with just the email if it doesn't exist
-        const { data: newProfile, error: insertError } = await supabase
-          .from('profiles')
-          .insert({ email: String(email) })
-          .select()
-          .single();
+        const newProfile = await db
+          .insert(profiles)
+          .values({ email: String(email) })
+          .returning();
           
-        if (insertError) {
-          return res.status(500).json({ error: insertError.message });
-        }
-        return res.json(newProfile);
+        return res.json(newProfile[0]);
       }
       
-      res.json(profiles[0]);
+      res.json(userProfiles[0]);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -139,25 +133,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Email is required" });
       }
       
-      const { data: updatedProfile, error } = await supabase
-        .from('profiles')
-        .update({ 
+      const updatedProfile = await db
+        .update(profiles)
+        .set({ 
           username: username || null,
-          phone_number: phoneNumber || null,
-          updated_at: new Date().toISOString()
+          phoneNumber: phoneNumber || null,
+          updatedAt: new Date()
         })
-        .eq('email', email)
-        .select()
-        .single();
+        .where(eq(profiles.email, email))
+        .returning();
       
-      if (error) {
-        if (error.code === 'PGRST116') {
-          return res.status(404).json({ error: "Profile not found" });
-        }
-        return res.status(500).json({ error: error.message });
+      if (updatedProfile.length === 0) {
+        return res.status(404).json({ error: "Profile not found" });
       }
       
-      res.json(updatedProfile);
+      res.json(updatedProfile[0]);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
